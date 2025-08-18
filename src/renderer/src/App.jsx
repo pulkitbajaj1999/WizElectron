@@ -1,13 +1,13 @@
 import { RouterProvider, createHashRouter } from 'react-router-dom'
-import Home from '@components/Home'
 import Scenes from '@components/Scenes'
 import BulbProvider from '@context/BulbContext'
 import Devices from '@components/Devices'
+import WizController from '@views/WizController'
 
 const router = createHashRouter([
   {
     path: '/',
-    element: <Home />
+    element: <WizController />
   },
   {
     path: '/scenes',

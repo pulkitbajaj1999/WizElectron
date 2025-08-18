@@ -90,8 +90,31 @@ function Sidebar() {
   )
 
   const visitAuthorHandler = () => window.api.visitAuthor()
+
+  const handleInvoke = async () => {
+    let data = await window.api.testInvoke({ data: 'invoked data' })
+    console.log('[handleinvoke]', data)
+  }
+  const handleSend = async () => {
+    let data = await window.api.testSend({ data: 'send data' })
+    console.log('[handlesend]', data)
+  }
   return (
     <div className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark sidebar-w pb-1">
+      <button
+        onClick={() => {
+          handleInvoke()
+        }}
+      >
+        test invoke
+      </button>
+      <button
+        onClick={() => {
+          handleSend()
+        }}
+      >
+        test send
+      </button>
       <a
         href="#"
         className="d-flex align-items-center justify-content-center mb-3 mb-md-0 fw-bold text-decoration-none"

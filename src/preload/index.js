@@ -17,7 +17,9 @@ const api = {
   setCustomColor: (name) => electronAPI.ipcRenderer.send('set-custom-color', name),
   editCustomColor: (id, name, hex) => electronAPI.ipcRenderer.send('edit-color', id, name, hex),
   removeCustomColor: (id) => electronAPI.ipcRenderer.send('remove-color', id),
-  getVersion: () => electronAPI.ipcRenderer.invoke('get-version')
+  getVersion: () => electronAPI.ipcRenderer.invoke('get-version'),
+  testInvoke: (data) => electronAPI.ipcRenderer.invoke('test', data),
+  testSend: (data) => electronAPI.ipcRenderer.send('test', data)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

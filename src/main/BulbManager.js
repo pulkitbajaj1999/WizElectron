@@ -221,6 +221,29 @@ class BulbManager {
       log.info('Connection with bulb closed')
     }
   }
+
+  async getPilotInfo() {
+    try {
+      log.info(`Getting pilot info for the bulb`)
+      let data = await this.bulb.getPilot()
+      log.info('pilot-info:', data)
+      this.bulbState = {
+        ...this.bulbState,
+        pilotInfo: data
+      }
+      this.window.webContents.send('on-update-bulb', this.bulbState)
+    } catch {
+      log.error(`Failed to get pilot info, connection lost`)
+      await this.reconnectBulb()
+    }
+  }
+
+  async subscribeAndListen() {
+    // await this.bulb.subscribe()
+    this.bulb.onMessage((message) => {
+      log.info('[onmessge] message: ', message)
+    })
+  }
 }
 
 export default BulbManager

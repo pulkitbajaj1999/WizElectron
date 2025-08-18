@@ -1,5 +1,4 @@
 import { app, ipcMain, shell } from 'electron'
-import BulbManager from '@main/BulbManager'
 import { AUTHOR_URL } from '@main/constants'
 
 const registerIPCEvents = (BulbManager) => {
@@ -50,6 +49,29 @@ const registerIPCEvents = (BulbManager) => {
 
   ipcMain.handle('get-version', () => {
     return app.getVersion()
+  })
+
+  ipcMain.on('get-pilot-info', async () => {
+    await BulbManager.getPilotInfo()
+  })
+
+  ipcMain.on('test', async (event, data) => {
+    return await BulbManager.getPilotInfo()
+    console.log('[ipcevents][on]:', data)
+    await new Promise((resolve, reject) => {
+      setTimeout(resolve, 1000)
+    })
+    console.log('[ipcevents][on]: resolved')
+    return { message: 'test called with on' }
+  })
+
+  ipcMain.handle('test', async (event, data) => {
+    return BulbManager.subscribeAndListen()
+    console.log('[ipcevents][handle]:', data)
+    await new Promise((resolve, reject) => {
+      setTimeout(resolve, 1000)
+    })
+    return { message: 'data returned from handle' }
   })
 }
 

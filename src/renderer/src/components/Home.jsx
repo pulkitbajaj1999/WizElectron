@@ -1,137 +1,141 @@
-import { useState } from 'react'
-import IpModal from '@components/IpModal'
-import Sidebar from '@components/Sidebar'
-import { useBulb } from '@context/BulbContext'
-import { Button, Col, Container, FormCheck, FormControl, Row, Spinner } from 'react-bootstrap'
-import { FaFloppyDisk, FaLightbulb } from 'react-icons/fa6'
-import { FaEdit } from 'react-icons/fa'
-import { useTranslation } from 'react-i18next'
+import React, { useState } from 'react'
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Switch,
+  Container,
+  Box,
+  Grid,
+  IconButton,
+  Slider,
+  Divider,
+  BottomNavigation,
+  BottomNavigationAction,
+  Paper
+} from '@mui/material'
 
-export default function Home() {
-  const { bulb, setBulb } = useBulb()
-  const [isEditActive, setIsEditActive] = useState(false)
-  const [showIpModal, setShowIpModal] = useState(false)
-  const [nameInput, setNameInput] = useState('')
-  const { t } = useTranslation()
+import {
+  Lightbulb as LightbulbIcon,
+  WbIncandescent as FocusIcon,
+  Bedtime as RelaxIcon,
+  LocalCafe as CoffeeIcon,
+  SelfImprovement as MeditateIcon,
+  EmojiPeople as PartyIcon,
+  Nightlight as NightIcon,
+  AcUnit as CoolIcon,
+  WbSunny as WarmIcon,
+  FlashOn as EnergizeIcon,
+  Tv as MovieIcon,
+  ExpandLess as DimIcon,
+  ExpandMore as BrightIcon,
+  Palette as ColorIcon,
+  AutoAwesome as DynamicIcon,
+  Layers as StaticIcon
+} from '@mui/icons-material'
 
-  const lightSwitchHandler = () => {
-    window.api.toggleBulb()
-    setBulb((prev) => {
-      return { ...prev, state: !prev.state }
-    })
-  }
+const scenes = [
+  { label: 'Relax', icon: <RelaxIcon /> },
+  { label: 'Focus', icon: <FocusIcon /> },
+  { label: 'Coffee', icon: <CoffeeIcon /> },
+  { label: 'Meditate', icon: <MeditateIcon /> },
+  { label: 'Party', icon: <PartyIcon /> },
+  { label: 'Night', icon: <NightIcon /> },
+  { label: 'Cool', icon: <CoolIcon /> },
+  { label: 'Warm', icon: <WarmIcon /> },
+  { label: 'Energize', icon: <EnergizeIcon /> },
+  { label: 'Movie', icon: <MovieIcon /> },
+  { label: 'Reading', icon: <FocusIcon /> }
+]
 
-  const handleCloseIpModal = () => {
-    setShowIpModal(false)
-  }
+export default function WizController() {
+  const [isOn, setIsOn] = useState(true)
+  const [selectedScene, setSelectedScene] = useState('Relax')
+  const [brightness, setBrightness] = useState(50)
+  const [tab, setTab] = useState(0)
 
-  const handleChangeName = (event) => {
-    if (event.target.value === '') return
-
-    if (event.key === 'Enter') {
-      setBulb((prev) => {
-        return { ...prev, name: event.target.value }
-      })
-
-      window.api.setBulbName(event.target.value)
-      setIsEditActive(false)
-    }
-  }
-
-  const bulbElement = () => (
-    <Row>
-      <Col sm={6} style={{ maxWidth: '20rem' }}>
-        <div className="d-flex p-3 justify-content-between gap-3 align-items-center text-white rounded bg-primary bg-opacity-25 border border-2 border-primary fw-bold fs-6">
-          <FaLightbulb size={35} />
-          {isEditActive ? (
-            <FormControl
-              type="text"
-              maxLength={15}
-              defaultValue={bulb.name}
-              onKeyUp={handleChangeName}
-              autoFocus
-              onChange={(e) => setNameInput(e.target.value)}
-              data-bs-theme="dark"
-            />
-          ) : (
-            <div className="d-flex justify-content-between flex-fill bulb gap-4">
-              <span>{bulb.name || bulb.moduleName}</span>
-              <FormCheck
-                id="lightSwitch"
-                type="switch"
-                checked={bulb.state}
-                onChange={lightSwitchHandler}
-              />
-            </div>
-          )}
-        </div>
-      </Col>
-    </Row>
-  )
-
-  const editBtnHandler = () => {
-    setIsEditActive((prev) => !prev)
-    if (!isEditActive || nameInput === '') {
-      return
-    }
-
-    setBulb((prev) => {
-      return { ...prev, name: nameInput }
-    })
-
-    window.api.setBulbName(nameInput)
-  }
-
-  const searchingForBulbElement = () => (
-    <Row>
-      <Col sm={6} style={{ maxWidth: '20rem' }}>
-        <div className="d-flex p-3 justify-content-between align-items-center gap-2 text-white rounded bg-primary bg-opacity-25 border border-2 border-primary fw-bold">
-          <FaLightbulb size={35} />
-          <div className="d-flex justify-content-between flex-fill bulb align-items-center">
-            <span>{t('searchingBulb.search')}</span>
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </Spinner>
-          </div>
-        </div>
-        <div className="text-white fw-bold mt-3 ms-2 text-xs d-flex align-items-center justify-content-around">
-          <span>{t('searchingBulb.notFound')}</span>
-          <Button
-            className="text-decoration-none add p-0 m-0 border-0"
-            variant="link"
-            onClick={() => setShowIpModal(true)}
-          >
-            {t('searchingBulb.manual')}
-          </Button>
-        </div>
-      </Col>
-    </Row>
-  )
+  const handleToggle = () => setIsOn(!isOn)
+  const handleSceneClick = (label) => setSelectedScene(label)
+  const handleBrightnessChange = (_, value) => setBrightness(value)
 
   return (
-    <main className="d-flex flex-nowrap bg-main vh-100">
-      <Sidebar />
-      <Container fluid>
-        <Row>
-          <Col>
-            <h1 className="my-4 d-flex align-items-center justify-content-center">
-              <span className="text-white display-6 fw-bold me-2">{t('lightTitle')}</span>
-            </h1>
-          </Col>
-        </Row>
-        <Button
-          variant="primary"
-          className={`edit border-0 rounded-5 mb-3 p-2 px-4 ${
-            bulb ? '' : 'visually-hidden'
-          } d-flex align-items-center`}
-          onClick={editBtnHandler}
-        >
-          {isEditActive ? <FaFloppyDisk /> : <FaEdit />}
-          <span className="ms-1">{isEditActive ? t('SaveChanges') : t('ChangeBulbName')}</span>
-        </Button>
-        <div className="lights">{bulb ? bulbElement() : searchingForBulbElement()}</div>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Top Bar */}
+      <AppBar position="static" color="primary">
+        <Toolbar>
+          <LightbulbIcon sx={{ mr: 2 }} />
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Living Room Light
+          </Typography>
+          <Switch
+            checked={isOn}
+            onChange={handleToggle}
+            inputProps={{ 'aria-label': 'light toggle' }}
+            sx={{
+              '& .MuiSwitch-switchBase.Mui-checked': {
+                color: '#fff176'
+              },
+              '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                backgroundColor: '#fff176'
+              }
+            }}
+          />
+        </Toolbar>
+      </AppBar>
+
+      {/* Main Content */}
+      <Container
+        className="main-container"
+        sx={{ flexGrow: 1, py: 2, display: 'flex', flexDirection: 'column' }}
+      >
+        {/* Scene Grid */}
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={4}>
+            {scenes.map(({ label, icon }) => (
+              <Grid item xs={4} sm={3} md={2} key={label} textAlign="center">
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <IconButton
+                    color={selectedScene === label ? 'primary' : 'default'}
+                    onClick={() => handleSceneClick(label)}
+                    size="large" // <--- See next point
+                  >
+                    {icon}
+                  </IconButton>
+                  <Typography variant="body2" fontSize="0.7rem" sx={{ mt: 0.5 }}>
+                    {label}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Divider */}
+        <Divider sx={{ my: 2 }} />
+
+        {/* Brightness Slider */}
+        <Box className="brightness-slider" sx={{ display: 'flex', alignItems: 'center', px: 2 }}>
+          <DimIcon color="action" />
+          <Slider
+            value={brightness}
+            onChange={handleBrightnessChange}
+            min={0}
+            max={100}
+            sx={{ mx: 2, flex: 1 }}
+            aria-label="Brightness"
+          />
+          <BrightIcon color="action" />
+        </Box>
       </Container>
-      <IpModal show={showIpModal} handleClose={handleCloseIpModal} />
-    </main>
+
+      {/* Bottom Navigation */}
+      <Paper elevation={3}>
+        <BottomNavigation value={tab} onChange={(e, newValue) => setTab(newValue)} showLabels>
+          <BottomNavigationAction label="Static" icon={<StaticIcon />} />
+          <BottomNavigationAction label="Dynamic" icon={<DynamicIcon />} />
+          <BottomNavigationAction label="Color" icon={<ColorIcon />} />
+        </BottomNavigation>
+      </Paper>
+    </Box>
   )
 }

@@ -5,7 +5,7 @@ import path from 'node:path'
 const ICON = nativeImage.createFromPath(path.join(__dirname, icon))
 const CONFIG = path.join(app.getPath('userData'), 'config.json')
 const AUTHOR_URL = 'https://www.github.com/pulkitbajaj1999'
-const MIN_WIDTH = 900
+const MIN_WIDTH = 500
 const MIN_HEIGHT = 600
 const HIDE_MENU = true
 const RELEASE_URL = 'https://api.github.com/repos/pulkitbajaj1999/wiz-electron/releases/latest'

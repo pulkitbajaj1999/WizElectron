@@ -18,6 +18,7 @@ const BulbProvider = ({ children }) => {
   useEffect(() => {
     window.api.onUpdateBulb((bulb) => {
       log.debug('[RENDERER] Bulb updated')
+      log.debug(`[RENDERER] bulb state: ${JSON.stringify(bulb)}`)
       setBulb(bulb)
     })
   }, [])
