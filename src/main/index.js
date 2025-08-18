@@ -1,21 +1,37 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+// import icon from '../../resources/icon.png?asset'
+// import handlePing from './handlePing'
+import registerIPCEvents from '@main/ipcEvents'
+import BulbManager from '@main/BulbManager'
+import initializeLogger from '@main/logger'
+import { ICON, MIN_WIDTH, MIN_HEIGHT, HIDE_MENU } from '@main/constants'
+
+initializeLogger()
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
-    show: false,
-    autoHideMenuBar: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    height: MIN_HEIGHT,
+    width: MIN_WIDTH,
+    minWidth: MIN_WIDTH,
+    minHeight: MIN_HEIGHT,
+    icon: ICON,
+    autoHideMenuBar: HIDE_MENU,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      devTools: !app.isPackaged
     }
   })
+
+  const bulbHelper = new BulbManager(mainWindow)
+
+  // checkForUpdates(app);
+  // createTray(mainWindow, app, bulbHelper;
+  registerIPCEvents(bulbHelper)
+  // ipcMain.on('ping', (event, data) => {handlePing(event, data)})
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -48,9 +64,6 @@ app.whenReady().then(() => {
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
   })
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
 

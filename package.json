@@ -1,12 +1,12 @@
 {
   "name": "wiz-electron",
   "version": "1.0.0",
-  "description": "An Electron application with React",
+  "description": "Application to control wiz lights using electron+vite+react",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "pbajaj",
   "homepage": "https://electron-vite.org",
   "scripts": {
-    "format": "prettier --write .",
+    "format": "prettier --write \"**/*.{js,jsx}\"",
     "lint": "eslint --cache .",
     "start": "electron-vite preview",
     "dev": "electron-vite dev",
@@ -19,7 +19,18 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
-    "@electron-toolkit/utils": "^4.0.0"
+    "@electron-toolkit/utils": "^4.0.0",
+    "bootstrap": "^5.3.7",
+    "dgram": "^1.0.1",
+    "electron-log": "^5.4.3",
+    "i18next": "^25.4.0",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "react": "^19.1.0",
+    "react-bootstrap": "^2.10.10",
+    "react-dom": "^19.1.0",
+    "react-i18next": "^15.7.1",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^6.30.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config": "^2.0.0",
@@ -33,8 +44,6 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "prettier": "^3.6.2",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
     "vite": "^7.0.5"
   }
 }
