@@ -21,6 +21,7 @@ import {
 } from "./types";
 import { getRandomMac, hexToRgb, ipAddress } from "./utils";
 import { WikariError, WikariErrorCode } from "./wikari-error";
+import logger from './logger'
 
 export const enum WikariState {
 	IDLE,
@@ -114,13 +115,28 @@ export class Bulb {
 	 * @param fn callback for when a syncPilot message is received
 	 */
 	onSync(fn: (msg: SyncPilotResponse) => void) {
+		logger.debug(`[on-sync] listening for sync-pilot message`)
 		Bulb.client.on("message", (bulbMsg, rinfo) => {
+			logger.debug(`[on-sync] message arrived from custom onsync`)
 			if (rinfo.address != this.address) return;
 			try {
 				const msg: Message = JSON.parse(bulbMsg.toString());
 				if (checkType(syncPilotResponseTemplate, msg)) fn(msg);
 			} catch {}
 		});
+	}
+
+	/**
+	 * After calling {@link this.removeAllListeners}, the bulb will remove
+	 * all the attached listeners on message
+	 * hence all onMessage handlers and onSubscribe handlers will be removed
+	 */
+	removeAllListeners() {
+		logger.debug('[remove-all-listeners] removing all listeners for message')
+		Bulb.client.removeAllListeners('message');
+		if (Bulb.state === WikariState.AWAITING_RESPONSE) {
+			Bulb.setInstanceState(WikariState.READY);
+		}
 	}
 
 	/**
@@ -156,7 +172,9 @@ export class Bulb {
 		});
 
 		if (!(result instanceof WikariError)) {
+			logger.debug(`[subscribe] listening for sync pilot message`)
 			Bulb.client.addListener("message", msg => {
+				logger.debug(`[subscribe] message arrived | triggering syncpilot`)
 				try {
 					const response = JSON.parse(msg.toString());
 
@@ -227,21 +245,21 @@ export class Bulb {
 	 * Note that the second argument is strongly typed, and will not let
 	 * you set speed or dimming on scenes that do not support them.
 	 *
-	 * @param sceneId scene ID from 1 to 32 (both inclusive)
+	 * @param sceneId scene ID from 1 to 36 (both inclusive)
 	 * @param args arguments associated with @param sceneId
 	 * @returns response from the bulb on success, {@link WikariError} otherwise
 	 */
 	async scene<T extends number>(sceneId: T, args: GetSceneArgs<T> = {}) {
-		if (sceneId < 1 || sceneId > 32)
+		if (sceneId < 1 || sceneId > 36)
 			return new WikariError(
 				WikariErrorCode.ArgumentOutOfRange,
 				{
 					argument: "sceneId",
 					lowerLimit: 1,
-					higherLimit: 32,
+					higherLimit: 36,
 					provided: sceneId,
 				},
-				"Scene ID must be in the range 1 <> 32",
+				"Scene ID must be in the range 1 <> 36",
 			);
 
 		for (const [key, value] of Object.entries(args)) {
@@ -395,6 +413,7 @@ export class Bulb {
 			let timer: ReturnType<typeof setTimeout>;
 
 			const messageListener = (msg: Buffer, rinfo: dgram.RemoteInfo) => {
+				logger.debug('[send-with-wait] message arrived clearing timer: ', String(timer))
 				// if the message is not from the bulb IP, ignore it
 				if (rinfo.address != this.address) return;
 
@@ -438,6 +457,7 @@ export class Bulb {
 				this.address,
 				error => {
 					if (error) {
+						logger.error('error while sending message timer: ', String(timer), error)
 						if (timer) clearTimeout(timer);
 						Bulb.setInstanceState(WikariState.READY);
 						reject(
@@ -457,7 +477,9 @@ export class Bulb {
 				this.responseTimeout ?? DEFAULT_RESPONSE_WAIT_MS;
 
 			timer = setTimeout(() => {
+				logger.debug('[send-with-wait] request timeout of timer: ', String(timer))
 				Bulb.client.off("message", messageListener);
+				Bulb.setInstanceState(WikariState.READY);
 				reject(
 					new WikariError(
 						WikariErrorCode.RequestTimedOut,
@@ -468,6 +490,7 @@ export class Bulb {
 					),
 				);
 			}, getResponseTimeout());
+			logger.debug('[send-with-wait] sending message with timer', String(timer))
 		});
 	}
 

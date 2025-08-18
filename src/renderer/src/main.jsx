@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 
 // css and style imports
 import './index.css'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import '@assets/base.css'
 
 // i18n setup
 import '@i18n/index'

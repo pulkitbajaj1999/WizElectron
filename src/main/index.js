@@ -1,8 +1,7 @@
+import 'dotenv/config'
 import { app, shell, BrowserWindow } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-// import icon from '../../resources/icon.png?asset'
-// import handlePing from './handlePing'
 import registerIPCEvents from '@main/ipcEvents'
 import BulbManager from '@main/BulbManager'
 import initializeLogger from '@main/logger'
@@ -28,10 +27,9 @@ function createWindow() {
 
   const bulbHelper = new BulbManager(mainWindow)
 
-  // checkForUpdates(app);
-  // createTray(mainWindow, app, bulbHelper;
+  // Registers IPC event listeners on the main process using Electron's ipcMain.
+  // Sets up handlers for messages sent from the renderer process,
   registerIPCEvents(bulbHelper)
-  // ipcMain.on('ping', (event, data) => {handlePing(event, data)})
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

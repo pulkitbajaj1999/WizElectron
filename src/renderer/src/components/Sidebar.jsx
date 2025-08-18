@@ -1,127 +1,143 @@
-import logo from '@assets/logo_sidebar.png'
-import { useBulb } from '@context/BulbContext'
-import { ReactNode, memo, useEffect, useState } from 'react'
-import { FaCircleQuestion, FaImage, FaLightbulb } from 'react-icons/fa6'
+import {
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+  Tooltip,
+  Toolbar
+} from '@mui/material'
 import { Link, useMatch } from 'react-router-dom'
-
-import { Form, FormCheck } from 'react-bootstrap'
+import { FaCircleQuestion, FaLightbulb, FaGear } from 'react-icons/fa6'
+import {  MdMenu } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { MdBrightness5, MdBrightness7 } from 'react-icons/md'
+import { useState, memo } from 'react'
+import wizLogoSvg from '@assets/wiz-logo.svg'
+
+const expandedWidth = 150
+const collapsedWidth = 64
+const DEFAULT_ICON_SIZE = 25
 
 function Sidebar() {
-  const { bulb, setBulb } = useBulb()
-  const [isDragging, setIsDragging] = useState(false)
-  const [brightness, setBrightness] = useState(100)
+  const [isCollapsed, setIsCollapsed] = useState(true)
+  // eslint-disable-next-line no-unused-vars
+  const [version, setVersion] = useState(() => sessionStorage.getItem('version') || '1.0.0')
   const { t } = useTranslation()
-  const [version, setVersion] = useState(() => {
-    return sessionStorage.getItem('version') || ''
-  })
 
-  useEffect(() => {
-    if (!version) {
-      window.api.getVersion().then((version) => {
-        sessionStorage.setItem('version', version)
-        setVersion(version)
-      })
-    }
-  }, [])
-
-  const renderItem = (label, faIcon, ref) => (
-    <li className="nav-item">
-      <Link
-        className={`nav-link ${
-          useMatch(ref) ? 'active' : ''
-        } fw-b text-white d-flex align-items-center gap-1`}
-        to={ref}
-      >
-        {faIcon}
-        <span className="ms-1 text-white text-decoration-none">{label}</span>
-      </Link>
-    </li>
-  )
-
-  const brightnessHandler = (event) => {
-    setBrightness(parseInt(event.target.value))
-  }
-
-  const lightSwitchHandler = () => {
-    window.api.toggleBulb()
-    setBulb((prev) => {
-      return { ...prev, state: !prev.state }
-    })
-  }
-
-  const handleMouseUp = () => {
-    if (isDragging) {
-      window.api.setBrightness(brightness)
-      setIsDragging(false)
-    }
-  }
-
-  const handleMouseDown = () => {
-    setIsDragging(true)
-  }
-
-  const renderShortcut = () => (
-    <div className="d-flex align-items-center flex-column-reverse gap-2 p-2 rounded justify-content-between shortcut">
-      <div className="d-flex align-items-center gap-2">
-        <MdBrightness5 size={25} />
-        <Form.Range
-          min={10}
-          max={100}
-          step={5}
-          onChange={brightnessHandler}
-          onMouseDown={handleMouseDown}
-          onMouseUp={handleMouseUp}
-          defaultValue={bulb.dimming}
-        />
-        <MdBrightness7 size={25} />
-      </div>
-      <div className="d-flex gap-2 align-items-center justify-content-between w-100 text-white fw-bold p-2">
-        <span className="sidebar-nombre">{bulb.name || bulb.moduleName}</span>
-        <FormCheck
-          id="lightSwitch"
-          type="switch"
-          checked={bulb.state}
-          onChange={lightSwitchHandler}
-        />
-      </div>
-    </div>
-  )
+  const toggleCollapse = () => setIsCollapsed((prev) => !prev)
 
   const visitAuthorHandler = () => window.api.visitAuthor()
+
+  const navItems = [
+    { label: t('menu.connect'), icon: FaLightbulb, path: '/connect' },
+    { label: t('menu.controller'), icon: FaGear, path: '/controller' },
+    { label: t('menu.deviceInfo'), icon: FaCircleQuestion, path: '/device-info' }
+  ]
+
+  const RenderNavItem = ({ label, icon: Icon, size, color, path }) => {
+    const isActive = !!useMatch({ path: path, end: false })
+    return (
+      <ListItem key={path} disablePadding sx={{ display: 'block' }}>
+        <Tooltip title={isCollapsed ? label : ''} placement="right">
+          <ListItemButton
+            component={Link}
+            to={path}
+            selected={isActive}
+            sx={{
+              minHeight: 48,
+              justifyContent: isCollapsed ? 'center' : 'initial',
+              px: 2,
+              mx: 0.5,
+              color: 'blue',
+              '&.Mui-selected': {
+                backgroundColor: 'rgba(0,0,255,0.2)',
+                borderRadius: 2
+              }
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                minWidth: 0,
+                mr: isCollapsed ? 0 : 2,
+                justifyContent: 'center',
+                color: 'blue'
+              }}
+            >
+              <Icon size={size || DEFAULT_ICON_SIZE} color={color || null} />
+            </ListItemIcon>
+            {!isCollapsed && <ListItemText primary={label} sx={{ color: 'black' }} />}
+          </ListItemButton>
+        </Tooltip>
+      </ListItem>
+    )
+  }
+
   return (
-    <div className="d-flex flex-column flex-shrink-0 p-3 text-bg-dark sidebar-w pb-1">
-      <a
-        href="#"
-        className="d-flex align-items-center justify-content-center mb-3 mb-md-0 fw-bold text-decoration-none"
-      >
-        <img
-          src={logo}
-          alt="Wiz logo"
-          className="img-fluid sidebar-image"
-          height="40px"
-          width="80px"
-        />
-      </a>
-      <hr />
-      <ul className="nav nav-pills flex-column mb-auto gap-2">
-        {renderItem(t('lightTitle'), <FaLightbulb size={20} />, '/')}
-        {renderItem(t('Scenes'), <FaImage size={20} />, '/scenes')}
-        {renderItem(t('Devices'), <FaCircleQuestion size={20} />, '/devices')}
-      </ul>
-      {bulb ? renderShortcut() : null}
-      <hr />
-      <div className="text-center">
-        {t('MadeBy')}
-        <a className="redirect" style={{ cursor: 'pointer' }} onClick={visitAuthorHandler}>
-          MatiasTK
-        </a>
-        <p className="small">
-          Version: <span className="fw-bold">{version}</span>
-        </p>
-      </div>
-    </div>
+    <Drawer
+      variant="permanent"
+      anchor="left"
+      sx={{
+        width: isCollapsed ? collapsedWidth : expandedWidth,
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
+        '& .MuiDrawer-paper': {
+          width: isCollapsed ? collapsedWidth : expandedWidth,
+          boxSizing: 'border-box',
+          backgroundColor: 'white',
+          transition: 'width 0.3s ease',
+          overflowX: 'hidden',
+          color: 'white'
+        }
+      }}
+    >
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* Logo + Toggle Button */}
+        <Toolbar
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: isCollapsed ? 'center' : 'flex-start',
+            px: isCollapsed ? 1 : 2,
+            borderBottom: '1px solid #ccc',
+            boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.1)',
+            gap: 1
+          }}
+        >
+          <IconButton onClick={toggleCollapse} size="small">
+            <MdMenu />
+          </IconButton>
+          {!isCollapsed && <img src={wizLogoSvg} alt="Wiz logo" width={80} height={40} />}
+        </Toolbar>
+
+        {/* Navigation */}
+        <Box className="navigation-list__wrapper" flexGrow={1}>
+          <List>{navItems.map(RenderNavItem)}</List>
+        </Box>
+
+        <Divider sx={{ mt: 2 }} />
+
+        {/* Footer Info */}
+        {!isCollapsed && (
+          <Box sx={{ textAlign: 'center', p: 2 }}>
+            <Typography
+              variant={'caption'}
+              onClick={visitAuthorHandler}
+              sx={{ cursor: 'pointer', textDecoration: 'underline', color: 'grey' }}
+            >
+              github
+            </Typography>
+            <Typography variant="caption" color="gray" display="block" mt={0.5}>
+              Version: <strong>{version}</strong>
+            </Typography>
+          </Box>
+        )}
+      </Box>
+    </Drawer>
   )
 }
 

@@ -1,5 +1,4 @@
 import { app, ipcMain, shell } from 'electron'
-import BulbManager from '@main/BulbManager'
 import { AUTHOR_URL } from '@main/constants'
 
 const registerIPCEvents = (BulbManager) => {
@@ -50,6 +49,26 @@ const registerIPCEvents = (BulbManager) => {
 
   ipcMain.handle('get-version', () => {
     return app.getVersion()
+  })
+
+  ipcMain.on('get-pilot-info', async () => {
+    await BulbManager.getPilotInfo()
+  })
+
+  ipcMain.on('set-color', async (event, colorHex) => {
+    return BulbManager.setColor(colorHex)
+  })
+
+  ipcMain.on('set-temperature', async (event, temp) => {
+    return BulbManager.setTemperature(temp)
+  })
+
+  ipcMain.on('subscribe-sync', async () => {
+    return BulbManager.subscribeSyncMessages()
+  })
+
+  ipcMain.on('clear-message-listeners', () => {
+    BulbManager.removeAllListeners()
   })
 }
 

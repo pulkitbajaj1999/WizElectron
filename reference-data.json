@@ -1,0 +1,225 @@
+{
+  "WARMEST" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -51,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646585,
+      "state": true,
+      "sceneId": 0,
+      "temp": 2200,
+      "dimming": 100
+    }
+  },
+  "WARM" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -49,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646513,
+      "state": true,
+      "sceneId": 11,
+      "temp": 2700,
+      "dimming": 100
+    }
+  },
+  "DAYLIGHT" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -50,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646521,
+      "state": true,
+      "sceneId": 12,
+      "temp": 4200,
+      "dimming": 100
+    }
+  },
+  "COOL" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -51,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646540,
+      "state": true,
+      "sceneId": 13,
+      "temp": 6500,
+      "dimming": 100
+    }
+  },
+
+
+
+
+  "NIGHT LIGHT": {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -49,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646220,
+      "state": true,
+      "sceneId": 14
+    }
+  },
+  "COZY": {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -50,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646257,
+      "state": true,
+      "sceneId": 6,
+      "dimming": 100
+    }
+  },
+  "TRUE COLORS": {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -48,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646335,
+      "state": true,
+      "sceneId": 17,
+      "dimming": 100
+    }
+  },
+  "RELAX" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -49,
+      "devices": 1,
+      "src": "andr2",
+      "state": true,
+      "sceneId": 16,
+      "dimming": 100
+    }
+  },
+  "FOCUS" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -48,
+      "devices": 1,
+      "src": "andr2",
+      "state": true,
+      "sceneId": 15,
+      "dimming": 100
+    }
+  },
+  "TV TIME" :  {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -49,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646385,
+      "state": true,
+      "sceneId": 18,
+      "dimming": 100
+    }
+  },
+  "PLANT GROWTH" :  {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -49,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646408,
+      "state": true,
+      "sceneId": 19,
+      "dimming": 100
+    }
+  },
+  "color[green]" :  {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -50,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646437,
+      "state": true,
+      "sceneId": 0,
+      "r": 107,
+      "g": 255,
+      "b": 0,
+      "c": 0,
+      "w": 66,
+      "dimming": 100
+    }
+  },
+  "color[purple]": {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -50,
+      "devices": 1,
+      "src": "hb",
+      "mqttCd": 0,
+      "ts": 1756646456,
+      "state": true,
+      "sceneId": 0,
+      "r": 88,
+      "g": 0,
+      "b": 255,
+      "c": 0,
+      "w": 0,
+      "dimming": 100
+    }
+  },
+  "temperature[4700]" : {
+    "method": "syncPilot",
+    "env": "pro",
+    "params": {
+      "mac": "cc408563127e",
+      "rssi": -50,
+      "devices": 1,
+      "src": "andr2",
+      "state": true,
+      "sceneId": 0,
+      "temp": 4675,
+      "dimming": 100
+    }
+  }
+
+}

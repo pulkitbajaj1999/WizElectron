@@ -1,5 +1,39 @@
 {
-  "lightTitle": "Lights",
+  "menu" : {
+    "connect": "Connect",
+    "controller" : "Controller",
+    "deviceInfo": "Device Info"
+  },
+  "connect": {
+    "pageTitle": "Connection",
+    "setIp": "Set"
+  },
+  "controller" : {
+    "defaultBulbName": "Wiz_Bulb",
+    "tabs": {
+      "static": "Static",
+      "dynamic": "Dynamic",
+      "color" : "Color"
+    }
+  },
+  "deviceInfo": {
+    "pageTitle": "Device Info",
+    "raw": "Raw",
+    "formatted": "Formatted",
+    "modal": {
+      "moduleName": "Module Name",
+      "ipAddress": "IP Address",
+      "port": "Port",
+      "macAddress": "MAC Address",
+      "status": "Status",
+      "sceneId": "Scene ID",
+      "brightness": "Brightness",
+      "temperature": "Temperature",
+      "firmwareVersion": "Firmware Version",
+      "homeId": "Home ID",
+      "roomId": "Room ID"
+    }
+  },
   "searchingBulb": {
     "search": "Searching bulb...",
     "notFound": "Can't find bulb?",
@@ -75,19 +109,6 @@
     }
   },
   "remove": "Remove",
-  "device": {
-    "title": "Device Info",
-    "moduleName": "Module Name",
-    "ipAddress": "IP Address",
-    "port": "Port",
-    "macAddress": "MAC Address",
-    "status": "Status",
-    "sceneId": "Scene ID",
-    "brightness": "Brightness",
-    "firmwareVersion": "Firmware Version",
-    "homeId": "Home ID",
-    "roomId": "Room ID"
-  },
   "tray": {
     "show": "Show app",
     "quit": "Quit",

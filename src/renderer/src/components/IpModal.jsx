@@ -1,21 +1,16 @@
-import { useState } from 'react'
-import {
-  Button,
-  Form,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  ModalTitle
-} from 'react-bootstrap'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { TextField, Button, Stack, InputAdornment } from '@mui/material'
+import { useBulb } from '../context/BulbContext'
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 
-export default function IpModal({ show, handleClose }) {
+export default function IpModal() {
+  const { t } = useTranslation()
+  const { bulb } = useBulb()
   const [value, setValue] = useState('')
   const [invalidIP, setInvalidIP] = useState(false)
   const ipRegex =
     /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-  const { t } = useTranslation()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -24,8 +19,10 @@ export default function IpModal({ show, handleClose }) {
       setInvalidIP(true)
       return
     }
+
     window.api.setIp(value)
-    handleClose()
+    setValue('')
+    setInvalidIP(false)
   }
 
   const handleChangeIp = (e) => {
@@ -33,38 +30,36 @@ export default function IpModal({ show, handleClose }) {
     setValue(e.target.value)
   }
 
+  useEffect(() => {
+    if (bulb && bulb.ip !== value) {
+      setValue(bulb.ip)
+    }
+  }, [bulb?.ip])
+
   return (
-    <Modal show={show} onHide={handleClose} data-bs-theme="dark" className="text-white" centered>
-      <ModalHeader closeButton>
-        <ModalTitle>{t('ip.add')}</ModalTitle>
-      </ModalHeader>
-      <Form noValidate onSubmit={handleSubmit}>
-        <ModalBody>
-          <Form.Group className="mb-3" controlId="ip">
-            <Form.Label>IP</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder={t('ip.placeholder')}
-              autoFocus
-              required
-              value={value}
-              onChange={handleChangeIp}
-              isValid={ipRegex.test(value)}
-              isInvalid={invalidIP}
-            />
-            <Form.Control.Feedback type="invalid">{t('ip.invalid')}</Form.Control.Feedback>
-            <Form.Control.Feedback type="valid">{t('ip.valid')}</Form.Control.Feedback>
-          </Form.Group>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="secondary" onClick={handleClose}>
-            {t('close')}
-          </Button>
-          <Button variant="primary" type="submit">
-            {t('SaveChanges')}
-          </Button>
-        </ModalFooter>
-      </Form>
-    </Modal>
+    <Stack direction="row" spacing={2}>
+      <TextField
+        label="IP"
+        placeholder={t('ip.placeholder')}
+        value={value}
+        onChange={handleChangeIp}
+        autoFocus
+        fullWidth
+        required
+        variant="outlined"
+        error={invalidIP}
+        InputProps={{
+          endAdornment:
+            !invalidIP && ipRegex.test(value) && value !== '' ? (
+              <InputAdornment position="end">
+                <CheckCircleIcon sx={{ color: 'green' }} />
+              </InputAdornment>
+            ) : null
+        }}
+      />
+      <Button onClick={handleSubmit} variant="contained" color="primary" sx={{ borderRadius: 2 }}>
+        {t('connect.setIp')}
+      </Button>
+    </Stack>
   )
 }
